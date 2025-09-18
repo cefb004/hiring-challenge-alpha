@@ -4,6 +4,7 @@ dotenv.config();
 import inquirer from "inquirer";
 import { ChatOpenAI } from "@langchain/openai";
 import { sqliteTool } from "./tools/sqliteTool.js";
+import { docTool } from "./tools/docTool.js";
 
 async function main() {
   console.log("Ì±ã Bem-vindo ao Multi-Source AI Agent Challenge!");
@@ -20,7 +21,8 @@ async function main() {
           "1. Testar conex√£o com modelo OpenAI",
           "2. Listar tabelas no music.db",
           "3. Mostrar primeiros 5 √°lbuns",
-          "4. Sair"
+          "4. Buscar em documento", 
+          "5. Sair"
         ]
       }
     ]);
@@ -64,7 +66,26 @@ async function main() {
         break;
       }
 
-      case "4. Sair":
+case "4. Buscar em documento": {
+  try {
+    const answers = await inquirer.prompt([
+      { type: "input", name: "fileName", message: "Nome do arquivo (.txt):" },
+      { type: "input", name: "query", message: "Termo a buscar:" }
+    ]);
+
+    const results = await docTool.call({
+      fileName: answers.fileName,
+      query: answers.query
+    });
+
+    console.log("Ì¥ç Resultados encontrados:\n", results);
+  } catch (err) {
+    console.error("‚ùå Erro:", err.message);
+  }
+  break;
+}
+
+      case "5. Sair":
         sair = true;
         console.log("Ì±ã Encerrando o agente. At√© logo!");
         break;
