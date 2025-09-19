@@ -1,84 +1,79 @@
 # Multi-Source AI Agent Challenge
 
-## Challenge Overview
+Este projeto implementa um Agente de IA multimodal capaz de buscar informações em diferentes fontes:
 
-Welcome to the Multi-Source AI Agent Challenge! In this project, you'll build an intelligent agent using Node.js and modern LLM frameworks that can answer questions by leveraging multiple data sources including SQLite databases, document files, and web content via bash commands.
+1) Banco SQLite (music.db)
 
-## Challenge Requirements
+2) Documentos de texto (.txt em /data/documents/)
 
-### Technology Stack
-- Node.js
-- [LangChain](https://js.langchain.com/docs/) - For LLM integration and chains
-- [LangGraph](https://js.langchain.com/docs/langgraph/) - For agent workflow orchestration
+3) Comandos de terminal (Bash) – com aprovação explícita do usuário
 
-### Core Features
-Your AI agent must be able to:
+O agente foi construído utilizando LangChain + LangGraph, integrado à API da OpenAI.
 
-1. **Answer questions using multiple data sources:**
-   - **SQLite databases**: The agent should query `.db` files placed in the `data/sqlite` folder
-   - **Document context**: The agent should extract information from `.txt` files in the `data/documents` folder
-   - **External data**: The agent should be able to run bash commands (with user approval) to gather additional data (e.g., using `curl` to fetch web content)
+## Funcionalidades
 
-2. **Implement a conversational interface** - either in the browser or terminal
+- Teste de conexão com modelo OpenAI (verifica se a integração funciona).
 
-3. **Provide intelligent routing** - decide which data source is most appropriate for each question and use the right tools accordingly
+- Consulta ao SQLite (music.db): listar tabelas, buscar registros de álbuns etc.
 
-### Minimum Viable Product
-Your solution must demonstrate:
+- Busca em documentos de texto (economy_books.txt e outros).
 
-- A functional agent that can respond to user questions
-- Proper routing between different data sources
-- A clear execution flow with user approval for bash commands
-- Meaningful responses that integrate information from multiple sources when needed
+- Execução de comandos Bash (com confirmação e bloqueio de comandos perigosos).
 
-## Submission Guidelines
+- Orquestração com LangGraph para escolher dinamicamente a melhor fonte de dados.
 
-1. Fork this repository
-2. Implement your solution
-3. Submit a pull request with your implementation
-4. Include detailed instructions on how to run and test your solution
-5. Your code must be 100% functional
+- Menu interativo com Inquirer (terminal amigável).
 
-## Evaluation Criteria
+## Pré-requisitos
 
-Your submission will be evaluated based on:
+- Node.js (>= 18.x)
 
-- **Functionality**: Does it work as expected? Can it correctly use all three data sources?
-- **Code Quality**: Is the code well-organized, commented, and following best practices?
-- **Error Handling**: How does the agent handle edge cases and errors?
-- **User Experience**: Is the conversation with the agent natural and helpful?
-- **Documentation**: Is the setup and usage well documented?
+- NPM ou Yarn
 
-## Setup Instructions
+- Conta e chave da API OpenAI
 
-Include detailed instructions on how to set up and run your solution. For example:
+#### Como executar
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Configure environment variables (copy `.env.example` to `.env` and fill in required values)
-4. Add sample databases to the `sqlite` folder
-5. Add sample documents to the `documents` folder
-6. Start the agent: `npm start`
+Inicie o agente:
 
-## Testing Your Implementation
+npm start
 
-Your README should include instructions on how to test the agent functionality, such as:
+Será exibido um menu interativo como este:
+? O que você quer fazer? (Use arrow keys)
 
-1. Sample questions that query SQLite databases
-2. Sample questions that require document context
-3. Sample questions that would trigger bash commands (and how to approve them)
-4. Examples of questions that combine multiple data sources
+❯ 1) Testar conexão com modelo OpenAI
 
-## Resources
+  2) Listar tabelas no music.db
+   
+  3) Mostrar primeiros 5 álbuns
+     
+  4) Buscar em Documento
+     
+  5) Executar comando Bash (com aprovação)
+     
+  6) Sair
 
-- [LangChain JS Documentation](https://js.langchain.com/docs/)
-- [LangGraph Documentation](https://js.langchain.com/docs/langgraph/)
-- [SQLite in Node.js Guide](https://www.sqlitetutorial.net/sqlite-nodejs/)
+#### Exemplos de uso
 
-## License
+- SQLite → "Mostrar primeiros 5 álbuns" retorna registros da tabela Album.
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+- Documento → buscar "economy" em economy_books.txt.
 
----
+- Bash → executar echo Olá mundo → requer confirmação.
 
-Good luck with your implementation! We're excited to see your creative solutions to this challenge.
+### Segurança da Bash Tool
+
+- Implementa denylist de comandos perigosos (rm -rf, sudo, shutdown etc).
+
+- Requer confirmação explícita antes de rodar qualquer comando.
+
+- Limita saída a 10.000 caracteres e timeout de 15s.
+
+## Próximos passos
+
+ - Conectar as três Tools em um agente orquestrado com LangGraph.
+
+## Autor
+
+Projeto desenvolvido por Carlos Brandão como parte do desafio Hiring Challenge Alpha.
+   
