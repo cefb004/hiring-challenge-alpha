@@ -5,6 +5,7 @@ import inquirer from "inquirer";
 import { ChatOpenAI } from "@langchain/openai";
 import { sqliteTool } from "./tools/sqliteTool.js";
 import { docTool } from "./tools/docTool.js";
+import { bashTool } from "./tools/bashTool.js";
 
 async function main() {
   console.log("Ì±ã Bem-vindo ao Multi-Source AI Agent Challenge!");
@@ -21,8 +22,9 @@ async function main() {
           "1. Testar conex√£o com modelo OpenAI",
           "2. Listar tabelas no music.db",
           "3. Mostrar primeiros 5 √°lbuns",
-          "4. Buscar em documento", 
-          "5. Sair"
+          "4. Buscar em documento",
+          "5. Executar comando Bash (com aprova√ß√£o)",
+          "6. Sair"
         ]
       }
     ]);
@@ -85,7 +87,20 @@ case "4. Buscar em documento": {
   break;
 }
 
-      case "5. Sair":
+case "5. Executar comando Bash (com aprova√ß√£o)": {
+  try {
+    const { command } = await inquirer.prompt([
+      { type: "input", name: "command", message: "Comando shell a executar (ex: curl -s https://example.com):" }
+    ]);
+
+    const result = await bashTool.call({ command });
+    console.log("  Resultado do comando:\n", result);
+  } catch (err) {
+    console.error("‚ùå Erro:", err.message);
+  }
+  break;
+}
+      case "6. Sair":
         sair = true;
         console.log("Ì±ã Encerrando o agente. At√© logo!");
         break;
